@@ -12,8 +12,10 @@ npm install
 ```bash
 VITE_SUPABASE_URL=https://seu-projeto.supabase.co
 VITE_SUPABASE_ANON_KEY=sua-chave-anon-publica
+VITE_AUTH_REDIRECT_URL=https://seu-app.vercel.app
 ```
 4. Em Authentication > Providers, mantenha Email habilitado.
+5. Em Authentication > URL Configuration, use a mesma URL do `VITE_AUTH_REDIRECT_URL` em Site URL e Redirect URLs.
 
 ## Rodar localmente
 ```bash

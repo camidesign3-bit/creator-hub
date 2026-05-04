@@ -19,6 +19,7 @@ const EDITAR_CATS = ["Todos","Reels","Carrossel","Stories","TikTok","UGC","Outro
 const EDITAR_STATUS = ["Para editar","Editando","Pronto","Publicado"];
 const postColor = t => ({Reels:"#FF6B6B",Carrossel:"#FFB347",Stories:"#74B9FF",TikTok:"#A29BFE","Post foto":"#55D496"})[t]||"#CCC";
 const roteiroText = r => [r?.hook && `HOOK - ${r.hook}`, r?.body, r?.cta && `CTA - ${r.cta}`].filter(Boolean).join("\n\n");
+const authRedirectUrl = () => import.meta.env.VITE_AUTH_REDIRECT_URL?.trim() || window.location.origin;
 
 const INIT = {
   profile:{ name:"",handle:"",bio:"",email:"",phone:"",location:"Caruaru, PE",niche:"Beleza · Skincare · Lifestyle",presentation:"",followers:"",engagement:"",avgReach:"",mediakit:"" },
@@ -625,13 +626,20 @@ function AuthScreen() {
     setError("");
 
     const cleanEmail = email.trim();
+    const redirectUrl = authRedirectUrl();
     let result;
     if (isReset) {
       result = await supabase.auth.resetPasswordForEmail(cleanEmail, {
-        redirectTo: window.location.origin,
+        redirectTo: redirectUrl,
       });
     } else if (isSignup) {
-      result = await supabase.auth.signUp({ email: cleanEmail, password });
+      result = await supabase.auth.signUp({
+        email: cleanEmail,
+        password,
+        options: {
+          emailRedirectTo: redirectUrl,
+        },
+      });
     } else {
       result = await supabase.auth.signInWithPassword({ email: cleanEmail, password });
     }
